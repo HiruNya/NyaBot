@@ -19,12 +19,18 @@ def getCatPic():
     r = requests.get("http://thecatapi.com/api/images/get?format=src")
     return r.url
 
-def YandereGET(tag,num):
+def YandereGET(tag,num,site):
     #Thanks to Yande.re!
+    #site 0 = yand.re
+    #site 1 = konachan
+    if site == 0:
+        siteURL = "https://yande.re/post.json?limit=1&page="
+    elif site == 1:
+        siteURL = "http://konachan.com/post.json?limit=1&page="
     if tag.replace(" ","") == "":
-        r = requests.get("https://yande.re/post.json?limit=1&page="+str(num))
+        r = requests.get(siteURL+str(num))
     else:
-        r = requests.get("https://yande.re/post.json?limit=1&tags="+tag+"&page="+str(num))
+        r = requests.get(siteURL+str(num)+"&limit=1&tags="+tag)
     #print(r)
     p = r.text.replace("[{","")
     p = p.replace("}]","")
@@ -35,3 +41,5 @@ def YandereGET(tag,num):
         p3 = p2[10].replace('"file_url":"',"")
         p3 = p3.replace('"',"")
         return p3
+
+#def YandereTagSearch(SearchTerm,limit,order)

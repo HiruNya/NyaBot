@@ -21,6 +21,8 @@ tnf = 0
 tnp = 0
 #-!nya yandere
 tny = 0
+#-!nya konachan
+tnkc = 0
 
 #Setting up credentials
 token = 'MTkzNjQzMjQyODcxNDU1NzQ0.CkaX6g.4cMhAG02Ra0aq3sIy6eActKwnEA'
@@ -41,7 +43,7 @@ async def on_server_join(server):
 async def on_message(message):
     destination = message.channel
     if message.content.startswith("!nya"):
-        if message.content.startswith("!nya introduce"):
+        if message.content.startswith("!nya hello"):
             #Introduces itself
             global tni
             if TimeFunc.deltaTimeTrue(tni,time.time(),3):
@@ -92,10 +94,28 @@ async def on_message(message):
                     elif ("safe" in argument) or ("sfw" in argument):
                         argument = argument.replace("safe","rating:s")
                         argument = argument.replace("sfw","rating:s")
-                msg = API.YandereGET(argument,yc)
+                msg = API.YandereGET(argument,yc,0)
                 await client.send_message(destination,msg)
                 yc += 1
                 tny = int(time.time())
+        elif message.content.startswith("!nya konachan"):
+            if TimeFunc.deltaTimeTrue(tny,time.time(),3):
+                global tnkc
+                argument = message.content.replace("!nya konachan","")
+                if not "rating:" in argument:
+                    if ("?" in argument) or("questionable" in argument):
+                        argument = argument.replace("?","rating:q")
+                        argument = argument.replace("questionable","rating:q")
+                    elif ("explicit" in argument) or ("nsfw" in argument):
+                        argument = argument.replace("nsfw","rating:e")
+                        argument = argument.replace("explicit","rating:e")
+                    elif ("safe" in argument) or ("sfw" in argument):
+                        argument = argument.replace("safe","rating:s")
+                        argument = argument.replace("sfw","rating:s")
+                    msg = API.YandereGET(argument,yc,1)
+                    await client.send_message(destination,msg)
+                    yc += 1
+                    tny = int(time.time())
         elif message.content.startswith("!nya add"):
             argument = message.content.replace("!nya add","")
             argument = argument.replace(" ","")
