@@ -1,5 +1,7 @@
 # NyaBot
 A Discord Bot that has multipurpose funcionality
+<p><b>Link to add to Discord server:</b><br>
+https://discordapp.com/oauth2/authorize?client_id=193643146716905472&scope=bot&permissions=0x00004000
 
 <h4>Functions:</h4>
 "!nya help" - Gives a list of commands that can be inputted
