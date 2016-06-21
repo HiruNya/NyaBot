@@ -1,4 +1,7 @@
 import requests
+import time
+import Config
+import TimeFunc
 
 def getCatFacts(num):
     #Thanks to CatFacts-API.apppot.com!
@@ -36,10 +39,28 @@ def YandereGET(tag,num,site):
     p = p.replace("}]","")
     p2 = p.split(",")
     if len(p2) == 1:
-        return "Invalid Tag"
+    #    if tags.replace(" ","") != "":
+    #        r = requests.get(siteURL+"1$tags="+tag)
+    #        p = r.text.replace("[{","")
+    #        p = r.text.replace("}]","")
+    #        p2 = p.split(",")
+    #        if len(p2) == 1:
+    #            return "Invalid Tag"
+    #    else:
+         return "Invalid Tag"
     else:
         p3 = p2[10].replace('"file_url":"',"")
         p3 = p3.replace('"',"")
         return p3
 
-#def YandereTagSearch(SearchTerm,limit,order)
+def AniListGET(search):
+    LastGenerated = Config.ConfigGET("AniList","Time")
+    if  TimeFunc.deltaTimeTrue(LastGenerated,time.time(),3600):
+        r = requests.post("https://anilist.co/auth/access_token?grant_type=client_credentials&client_id=nightshadeneko-ulodg&client_secret=n2fwrgo05NxgSYX2gL2xsNn")
+        print("-----------------")
+        print(r.content)
+        print("-----------------")
+        p = r.text.replace('{access_token: "',"")
+        p = p.replace('"',"")
+        p2 = p.split(",")
+        print(p[0])
