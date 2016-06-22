@@ -29,7 +29,7 @@ tna = 0
 tnp = 0
 
 #Setting up credentials
-token = 'MTkzNjQzMjQyODcxNDU1NzQ0.CkaX6g.4cMhAG02Ra0aq3sIy6eActKwnEA'
+token = ''
 
 #Setting up the object
 client = discord.Client()
