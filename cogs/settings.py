@@ -8,3 +8,6 @@ YoutubeToken = ""
 
 # LOLAPI
 LOLAPIKEY = ""
+
+# OSU API
+OSUTOKEN = ""
