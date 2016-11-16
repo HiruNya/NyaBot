@@ -108,3 +108,24 @@ async def LOLProfile(client, message):
     else:
         output = "Invalid name"
     await client.send_message(message.channel, output)
+
+async def getOSUProfile(client, message):
+    ID = settings.OSUTOKEN
+    username = message.content.replace("!osu ", "")
+    URL = "https://osu.ppy.sh/api/get_user?k={0}&u={1}&type=username".format(ID, username)
+    async with aiohttp.ClientSession() as session, session.get(URL) as resp:
+        r = await resp.json()
+        try:
+            user = r[0]["username"]
+            lvl = r[0]["level"]
+            cc = r[0]["country"]
+            pp = r[0]["pp_raw"]
+            rs = r[0]["ranked_score"]
+            ts = r[0]["total_score"]
+            acc = round(float(r[0]["accuracy"]), 2)
+            output = "Username: {0}\r\nLvl: {1}, {2}\r\nPP: {3}\r\n"
+            output += "Ranked Score: {4}\r\nTotal Score: {5}\r\nAccuracy: {6}%"
+            output = output.format(user, lvl, cc, pp, rs, ts, acc)
+        except:
+            output = "Invalid Username"
+        await client.send_message(message.channel, output)

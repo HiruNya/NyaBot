@@ -8,6 +8,7 @@ import asyncio
 import settings
 import audio
 import API
+import talk
 
 # Setting up the discord client
 client = discord.Client()
@@ -63,6 +64,10 @@ async def on_message(message):
         await API.YandereReset(client, message, 1)
     elif msg.startswith("!lol "):
         await API.LOLProfile(client, message)
+    elif msg.startswith("!osu "):
+        await API.getOSUProfile(client, message)
+    else:
+        await talk.run(client, message)
 
 # Run the bot
 client.run(settings.DiscordToken)
