@@ -2,14 +2,12 @@
 
 # Import external modules
 import aiohttp
-import asyncio
 import json
 
 # Import my scripts
 import settings
 
-counter = {"yandere":1,"konachan":1}
-global counter
+counter = {"yandere": 1, "konachan": 1}
 
 async def YoutubeGet(search):
     search = search.replace(" ", "+")
@@ -18,12 +16,21 @@ async def YoutubeGet(search):
     async with aiohttp.ClientSession() as session:
         async with session.get("https://www.googleapis.com/youtube/v3/search?part=id&maxResults=1&q="+search+"&type=video&key="+settings.YoutubeToken) as resp:
             r = await resp.text()
-            output = json.loads(r)["items"][0]["id"]["videoId"]
-            return "https://www.youtube.com/watch?v="+output   
+            try:
+                output = json.loads(r)["items"][0]["id"]["videoId"]
+                output = "https://www.youtube.com/watch?v="+output
+            except IndexError:
+                output = "Error"
+            return output
+
+async def YoutubeSearch(client, message):
+    x = await YoutubeGet(message.content.replace("!yt ", ""))
+    await client.send_message(message.channel, x)
 
 async def YandereGet(client, message, site):
     # Site 0 = yande.re
     # Site 1 = konachan.com
+    global counter
     if site == 0:
         num = counter["yandere"]
         counter["yandere"] += 1
@@ -51,7 +58,7 @@ async def YandereGet(client, message, site):
                 output = "Invalid Tag"
     await client.send_message(message.channel, output)
 
-async def YandereReset(client, message,site):
+async def YandereReset(client, message, site):
     if site == 0:
         counter["yandere"] = 1
     elif site == 1:
@@ -66,9 +73,9 @@ async def LOLIDFind(message, API):
         async with session.get(URL) as resp:
             r = await resp.json()
             if "status" not in r:
-                ID = list(r.values())[0]["id"];
-                LVL = list(r.values())[0]["summonerLevel"];
-                NAME = list(r.values())[0]["name"];
+                ID = list(r.values())[0]["id"]
+                LVL = list(r.values())[0]["summonerLevel"]
+                NAME = list(r.values())[0]["name"]
             else:
                 ID = 0
                 LVL = ""
@@ -91,8 +98,10 @@ async def getLOLSummary(API, Summoner):
                     tk = x["totalTurretsKilled"]
                     nmk = x["totalNeutralMinionsKilled"]
                     ta = x["totalAssists"]
-                    output = "Summoner Name: {0}\r\nLvl: {1}\r\nWins: {2}\r\nTotal Champions Killed: {3}\r\n"
-                    output += "Total Turrets Killed: {4}\r\nTotal Neutral Minions Killed: {5}\r\nTotal Assists: {6}"
+                    output = "```markdown\nSummoner Name: {0}\r\nLvl: {1}\r\n"
+                    output += "Wins: {2}\r\nTotal Champions Killed: {3}\r\n"
+                    output += "Total Turrets Killed: {4}\r\nTotal Neutral Minions Killed: {5}\r\n"
+                    output += "Total Assists: {6}\n```"
                     output = output.format(Summoner["name"], Summoner["lvl"], won, ck, tk, nmk, ta)
                     return output
         except:
@@ -123,8 +132,8 @@ async def getOSUProfile(client, message):
             rs = r[0]["ranked_score"]
             ts = r[0]["total_score"]
             acc = round(float(r[0]["accuracy"]), 2)
-            output = "Username: {0}\r\nLvl: {1}, {2}\r\nPP: {3}\r\n"
-            output += "Ranked Score: {4}\r\nTotal Score: {5}\r\nAccuracy: {6}%"
+            output = "```markdown\nUsername: {0}\r\nLvl: {1}, {2}\r\nPP: {3}\r\n"
+            output += "Ranked Score: {4}\r\nTotal Score: {5}\r\nAccuracy: {6}%\n```"
             output = output.format(user, lvl, cc, pp, rs, ts, acc)
         except:
             output = "Invalid Username"
